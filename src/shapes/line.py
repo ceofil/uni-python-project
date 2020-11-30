@@ -20,7 +20,8 @@ class Line:
             y_start, y_end = min(self.y0, self.y1), max(self.y0, self.y1)
             for y in np.arange(y_start, y_end, 1):
                 x = m * y + b
-                canvas.put_pixel(x, y, self.color)
+                for tx in np.arange(x - self.thickness / 2, x + self.thickness / 2, 1):
+                    canvas.put_pixel(tx, y, self.color)
         else:
             m = dy / dx
             b = self.y0 - m * self.x0
@@ -28,4 +29,5 @@ class Line:
 
             for x in np.arange(x_start, x_end, 1):
                 y = m * x + b
-                canvas.put_pixel(x, y, self.color)
+                for ty in np.arange(y - self.thickness / 2, y + self.thickness / 2, 1):
+                    canvas.put_pixel(x, ty, self.color)
