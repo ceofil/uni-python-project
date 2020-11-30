@@ -1,13 +1,13 @@
 import png
-import src.canvas as canvas
+from src.canvas import Canvas
+from src.shapes.rect import Rect
 
 
 def main():
-    c = canvas.Canvas(255, 255)
-    for x in range(255):
-        for y in range(255):
-            c.put_pixel(x, y, x, y, y)
-    c.dump_to_png('test.png')
+    canvas = Canvas(255, 255)
+    rect = Rect(100, 50, 50, 100, (255, 255, 0), (255, 0, 255), 6)
+    rect.draw(canvas)
+    canvas.dump_to_png('test.png')
 
 
 if __name__ == '__main__':

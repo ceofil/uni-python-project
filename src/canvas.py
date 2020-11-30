@@ -8,8 +8,8 @@ class Canvas:
         self.pixels = [[(0, 0, 0) for _ in range(width)]
                        for _ in range(height)]
 
-    def put_pixel(self, x, y, r, g, b):
-        self.pixels[y][x] = (r, g, b)
+    def put_pixel(self, x, y, color):
+        self.pixels[y][x] = color
 
     def get_merged_rows(self):
         """Converts 2d array of pixels into an array of pixel 'rows' compatible with the png writer."""
