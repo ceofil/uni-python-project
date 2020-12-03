@@ -11,23 +11,22 @@ class Line:
         self.thickness = thickness
 
     def draw(self, canvas):
-        dx = abs(self.x1 - self.x0)
-        dy = abs(self.y1 - self.y0)
+        dx = self.x1 - self.x0
+        dy = self.y1 - self.y0
 
-        if dy > dx:
+        if abs(dy) > abs(dx):
             m = dx / dy
             b = self.x0 - m * self.y0
-            y_start, y_end = min(self.y0, self.y1), max(self.y0, self.y1)
-            for y in np.arange(y_start, y_end, 1):
+            step = 1 if self.y0 < self.y1 else -1
+            for y in np.arange(self.y0, self.y1, step):
                 x = m * y + b
                 for tx in np.arange(x - self.thickness / 2, x + self.thickness / 2, 1):
                     canvas.put_pixel(tx, y, self.color)
         else:
             m = dy / dx
             b = self.y0 - m * self.x0
-            x_start, x_end = min(self.x0, self.x1), max(self.x0, self.x1)
-
-            for x in np.arange(x_start, x_end, 1):
+            step = 1 if self.x0 < self.x1 else -1
+            for x in np.arange(self.x0, self.x1, step):
                 y = m * x + b
                 for ty in np.arange(y - self.thickness / 2, y + self.thickness / 2, 1):
                     canvas.put_pixel(x, ty, self.color)
