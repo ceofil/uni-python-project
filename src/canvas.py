@@ -9,8 +9,9 @@ class Canvas:
                         for _ in range(height)]
 
     def put_pixel(self, x, y, color):
-        x, y = int(x), int(y)
-        self._pixels[y][x] = (*color, 255)
+        if 0 <= x < self.width and 0 <= y < self.height:
+            x, y = int(x), int(y)
+            self._pixels[y][x] = (*color, 255)
 
     def get_merged_rows(self):
         """Converts 2d array of pixels into an array of pixel 'rows' compatible with the png writer."""
