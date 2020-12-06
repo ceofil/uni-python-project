@@ -2,15 +2,19 @@ from src.shapes.line import Line
 
 
 class Rect:
-    def __init__(self, x, y, width, height, fill, stroke_color, stroke_width=None):
+    def __init__(self, x, y, width, height, fill, stroke_color, stroke_width):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
         self.fill = fill
         self.stroke_color = stroke_color
-        self.stroke_width = stroke_width if stroke_width is not None and stroke_color is not None else min(width,
-                                                                                                           height) / 10
+        self.stroke_width = stroke_width
+
+    @staticmethod
+    def from_svg_props(attrib, style):
+        return Rect(float(attrib['x']), float(attrib['y']), float(attrib['width']), float(attrib['height']), style[0],
+                    style[1], style[2])
 
     @staticmethod
     def _draw_fill(x, y, width, height, color, canvas):
