@@ -4,6 +4,7 @@ from src.shapes.circle import Circle
 from src.shapes.line import Line
 from src.shapes.polyline import Polyline
 from src.shapes.path import Path
+from src.shapes.ellipse import Ellipse
 import re
 
 
@@ -23,7 +24,7 @@ def convert_color(clr):
         'pink': (255, 165, 165),
         'orange': (255, 165, 0),
         'magenta': (255, 0, 255),
-        'yellow': (0, 255, 255),
+        'yellow': (255, 255, 0),
         'brown': (165, 50, 50),
         'gray': (165, 165, 165)
     }
@@ -64,6 +65,7 @@ def parse_xml(filepath):
     root = tree.getroot()
     shapes = {
         'circle': Circle,
+        'ellipse': Ellipse,
         'line': Line,
         'path': Path,
         'polyline': Polyline,
