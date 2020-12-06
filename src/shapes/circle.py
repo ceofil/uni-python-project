@@ -12,6 +12,11 @@ class Circle:
         self.stroke_width = stroke_width
 
     @staticmethod
+    def from_svg_props(attrib, style):
+        assert 'r' in attrib and 'cx' in attrib and 'cy' in attrib
+        return Circle(float(attrib['cx']), float(attrib['cy']), float(attrib['r']), style[0], style[1], style[2])
+
+    @staticmethod
     def _draw_disc(x, y, min_radius, max_radius, color, canvas):
         for dx in np.arange(x - max_radius, x + max_radius, 1):
             for dy in np.arange(y - max_radius, y + max_radius, 1):

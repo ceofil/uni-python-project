@@ -12,9 +12,9 @@ class Path:
         self.closure = None
 
     @staticmethod
-    def from_svg_props(props):
+    def from_svg_props(props, style):
         steps = re.findall(r'[A-Za-z][^A-Za-z]*', props.get('d', ''))
-        return Path(steps, None, (165, 165, 255), 3)
+        return Path(steps, style[0], style[1], style[2])
 
     @staticmethod
     def parse_step(step):
@@ -35,6 +35,7 @@ class Path:
 
     def consume_horizontal(self, step_type, step_data):
         assert step_type.lower() == 'h'
+        print(step_data)
         assert len(step_data[0]) == 1, "invalid H/h step in path"
         x0, y0 = self.cursor
         x1, y1 = step_data[0][0], y0

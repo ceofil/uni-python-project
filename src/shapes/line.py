@@ -10,6 +10,19 @@ class Line:
         self.color = color
         self.thickness = thickness
 
+    @staticmethod
+    def from_svg_props(attrib, style):
+        assert 'x1' in attrib
+        assert 'y1' in attrib
+        assert 'x2' in attrib
+        assert 'y2' in attrib
+        return Line(float(attrib['x1']),
+                    float(attrib['y1']),
+                    float(attrib['x2']),
+                    float(attrib['y2']),
+                    style[1],
+                    style[2])
+
     def draw(self, canvas):
         dx = self.x1 - self.x0
         dy = self.y1 - self.y0
