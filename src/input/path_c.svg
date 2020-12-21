@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 555 555">
+
+<rect x="0" y="0" width="333" height="333" style="fill:none;stroke:pink;stroke-width:5" />
+  <path d="M10 10 Q 200 500 100 100" stroke="black" fill="none"/>
+<!--  <path d="M70 10 C 70 20, 120 20, 120 10" stroke="black" fill="none"/>-->
+<!--  <path d="M130 10 C 120 20, 180 20, 170 10" stroke="black" fill="none"/>-->
+<!--  <path d="M10 60 C 20 80, 40 80, 50 60" stroke="black" fill="none"/>-->
+<!--  <path d="M70 60 C 70 80, 110 80, 110 60" stroke="black" fill="none"/>-->
+<!--  <path d="M130 60 C 120 80, 180 80, 170 60" stroke="black" fill="none"/>-->
+<!--  <path d="M10 110 C 20 140, 40 140, 50 110" stroke="black" fill="none"/>-->
+<!--  <path d="M70 110 C 70 140, 110 140, 110 110" stroke="black" fill="none"/>-->
+<!--  <path d="M130 110 C 120 140, 180 140, 170 110" stroke="black" fill="none"/>-->
+
+
+<!--    <path d="M10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80" stroke="black" fill="none"/>-->
+
+<!--     <path d="M10 80 Q 95 10 180 80" stroke="black" fill="none"/>-->
+
+<!--    <path d="M10 80 Q 52.5 10, 95 80 T 180 80" stroke="black" fill="none"/>-->
+
+<!--    <path d="M10 315-->
+<!--           L 110 215-->
+<!--           A 30 50 0 0 1 162.55 162.45-->
+<!--           L 172.55 152.45-->
+<!--           A 30 50 -45 0 1 215.1 109.9-->
+<!--           L 315 10" stroke="black" fill="green" stroke-width="2" fill-opacity="0.5"/>-->
+
+
+<!--     <path d="M80 80-->
+<!--           A 45 45, 0, 0, 0, 125 125-->
+<!--           L 125 80 Z" fill="green"/>-->
+<!--  <path d="M230 80-->
+<!--           A 45 45, 0, 1, 0, 275 125-->
+<!--           L 275 80 Z" fill="red"/>-->
+<!--  <path d="M80 230-->
+<!--           A 45 45, 0, 0, 1, 125 275-->
+<!--           L 125 230 Z" fill="purple"/>-->
+<!--  <path d="M230 230-->
+<!--           A 45 45, 0, 1, 1, 275 275-->
+<!--           L 275 230 Z" fill="blue"/>-->
+</svg>
+<!--https://webplatform.github.io/docs/tutorials/building_svg_paths/-->
