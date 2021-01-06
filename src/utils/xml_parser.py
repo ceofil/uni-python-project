@@ -17,7 +17,7 @@ def convert_color(clr):
 
     colors = {
         'red': (255, 0, 0),
-        'green': (0, 255, 0),
+        'green': (20, 125, 20),
         'blue': (0, 0, 255),
         'white': (255, 255, 255),
         'black': (0, 0, 0),

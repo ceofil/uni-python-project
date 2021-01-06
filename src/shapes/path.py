@@ -68,48 +68,33 @@ class Path:
         self.cursor = (x1, y1)
         return Line(x0, y0, x1, y1, self.stroke_color, self.stroke_width)
 
-    def point_is_on_ellipse(self, x, y, cx, cy, rx, ry):
-        threshhold = 1
-        is_inside_small_ellipse = Ellipse.ellipse_factor(x, y, cx, cy, rx - threshhold, ry - threshhold) < 1
-        is_inside_big_ellipse = Ellipse.ellipse_factor(x, y, cx, cy, rx + threshhold, ry + threshhold) < 1
-        return is_inside_big_ellipse and not is_inside_small_ellipse
-
-    def find_ellipse_centers(self, p1, p2, rx, ry, canvas):
-        x0, y0 = p1
-        x1, y1 = p2
-
-        dx, dy = x1 - x0, y1 - y0
-
-        centers = []
-        for mx in np.arange(-rx, rx, 1):
-            for my in np.arange(-ry, ry, 1):
-                if self.point_is_on_ellipse(mx, my, 0, 0, rx, ry) and \
-                        self.point_is_on_ellipse(mx + dx, my + dy, 0, 0, rx, ry):
-                    cx0, cy0 = x0 - mx, y0 - my
-                    centroid_x, centroid_y = (x0 + x1) / 2, (y0 + y1) / 2
-                    cx1, cy1 = centroid_x + (centroid_x - cx0), centroid_y + (centroid_y - cy0)
-                    centers = [(cx0, cy0), (cx1, cy1)]
-                    break
-        return centers
-
-    def consume_arch(self, step_type, step_data, canvas):
+    def consume_arch(self, step_type, step_data):
         assert step_type.lower() == 'a'
-        print(step_data, step_type)
         data = step_data[0]
         rx = data[0]
         ry = data[1]
         meta = data[3]
+        upper = meta % 10 == 1
+        bigger = (meta // 10) % 10 == 1
         x1 = data[4]
         y1 = data[5]
         x0, y0 = self.cursor
         if step_type == 'a':
             x1 += x0
             y1 += y0
-        centers = self.find_ellipse_centers((x0, y0), (x1, y1), rx, ry, canvas)
+        centers = Ellipse.find_ellipse_centers((x0, y0), (x1, y1), rx, ry)
+
         if centers:
-            for cx, cy in centers:
-                Ellipse(cx, cy, rx, ry, None, (0, 0, 255), 1).draw(canvas)
-        return Line(x0, y0, x1, y1, (0, 0, 0), 2)
+            centers.sort(key=lambda c: c[1])  # sorting the points by Y, the one on the top will be first
+            # this if-else can probably be simplified with xor or some binary operation
+            if upper:
+                center_idx = 0 if bigger else 1
+            else:
+                center_idx = 1 if bigger else 0
+            cx, cy = centers[center_idx]
+            return Ellipse(cx, cy, rx, ry, self.fill_color, self.stroke_color, self.stroke_width,
+                           below_line=(not upper, ((x0, y0), (x1, y1))))
+        return None
 
     def consume_closure(self, step_type, _):
         assert step_type.lower() == 'z'
@@ -129,12 +114,7 @@ class Path:
         }
         for step in self.steps:
             step_type, step_data = Path.parse_step(step)
-            if step_type.lower() == 'a':
-                object = self.consume_arch(step_type, step_data, canvas)
-            else:
-                fun = func[step_type.lower()]
-                object = fun(step_type, step_data)
+            fun = func[step_type.lower()]
+            object = fun(step_type, step_data)
             if object:
-                # print(step_type, step_data)
-                # print(self.cursor)
                 object.draw(canvas)
