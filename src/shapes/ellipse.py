@@ -18,16 +18,22 @@ class Ellipse:
                        style[1], style[2])
 
     @staticmethod
-    def _inside_ellipse(x, y, cx, cy, rx, ry):
-        return ((cx - x) ** 2) / (rx ** 2) + ((cy - y) ** 2) / (ry ** 2) < 1
+    def _ellipse_factor(x, y, cx, cy, rx, ry):
+        return ((cx - x) ** 2) / (rx ** 2) + ((cy - y) ** 2) / (ry ** 2)
 
     def draw(self, canvas):
         for dx in np.arange(self.x - self.rx, self.x + self.rx, 1):
             for dy in np.arange(self.y - self.ry, self.y + self.ry, 1):
-                if Ellipse._inside_ellipse(dx, dy, self.x, self.y, self.rx, self.ry):
-                    if self.stroke_color and self.stroke_width and Ellipse._inside_ellipse(dx, dy, self.x, self.y,
-                                                                                           self.rx - self.stroke_width,
-                                                                                           self.ry - self.stroke_width):
-                        canvas.put_pixel(dx, dy, self.stroke_color)
-                    elif self.fill_color:
-                        canvas.put_pixel(dx, dy, self.fill_color)
+                if Ellipse._ellipse_factor(dx, dy, self.x, self.y, self.rx, self.ry):
+                    if self.stroke_color and self.stroke_width:
+                        inside_main_ellipse = Ellipse._ellipse_factor(
+                            dx, dy, self.x, self.y,
+                            self.rx - self.stroke_width,
+                            self.ry - self.stroke_width) < 1
+                        inside_extened_ellipse = Ellipse._ellipse_factor(
+                            dx, dy, self.x, self.y,self.rx, self.ry) < 1
+                        if inside_extened_ellipse:
+                            if not inside_main_ellipse:
+                                canvas.put_pixel(dx, dy, self.stroke_color)
+                            else:
+                                canvas.put_pixel(dx, dy, self.fill_color)
