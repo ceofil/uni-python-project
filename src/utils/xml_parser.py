@@ -60,9 +60,14 @@ def parse_style(attrib):
     return fill_color, stroke_color, stroke_width
 
 
+def parse_view_box(view_box_str):
+    return map(float, view_box_str.split())
+
+
 def parse_xml(filepath):
     tree = ET.parse(filepath)
     root = tree.getroot()
+    view_box = [int(float(x)) for x in root.attrib['viewBox'].split()]
     shapes = {
         'circle': Circle,
         'ellipse': Ellipse,
@@ -79,7 +84,7 @@ def parse_xml(filepath):
         if tag in shapes:
             shape_class = shapes[tag]
             objects.append(shape_class.from_svg_props(child.attrib, style))
-    return objects
+    return objects, view_box
 
 
 if __name__ == '__main__':

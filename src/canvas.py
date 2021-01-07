@@ -2,15 +2,16 @@ import png
 
 
 class Canvas:
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
-        self._pixels = [[(0, 0, 0, 0) for _ in range(width)]
-                        for _ in range(height)]
+    def __init__(self, view_box):
+        self.left, self.top, self.right, self.bottom = view_box
+        self.width = self.right - self.left
+        self.height = self.bottom - self.top
+        self._pixels = [[(0, 0, 0, 0) for _ in range(self.width)]
+                        for _ in range(self.height)]
 
     def put_pixel(self, x, y, color):
-        if 0 <= x < self.width and 0 <= y < self.height:
-            x, y = int(x), int(y)
+        if self.left <= x < self.right and self.top <= y < self.bottom:
+            x, y = int(x - self.left), int(y - self.top)
             self._pixels[y][x] = (*color, 255)
 
     def get_merged_rows(self):

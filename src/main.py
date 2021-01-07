@@ -9,10 +9,9 @@ from src.shapes.ellipse import Ellipse
 from src.utils.bezier_utils import three_points_bezier, four_points_bezier
 
 def main():
-    canvas = Canvas(500, 500)
-    Rect(0, 0, 500, 500, None, (255, 255, 255), 6).draw(canvas)
 
-    objects = parse_xml(r'D:\GitHub\uni-python-project\src\input\path_c.svg')
+    objects, view_box = parse_xml(r'D:\GitHub\uni-python-project\src\input\path_c.svg')
+    canvas = Canvas(view_box)
     for obj in objects:
         obj.draw(canvas)
 

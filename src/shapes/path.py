@@ -153,6 +153,8 @@ class Path:
             x1, y1 = x1 + x0, y1 + y0
             x_handle0, y_handle0 = x_handle0 + x0, y_handle0 + y0
         three_points_bezier(x0, y0, x_handle0, y_handle0, x1, y1, canvas, self.stroke_color, self.stroke_width)
+        self.last_control_point = x_handle0, y_handle0
+        self.cursor = (x1, y1)
 
 
     def consume_closure(self, step_type, _, canvas):
