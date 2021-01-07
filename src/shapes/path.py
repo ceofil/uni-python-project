@@ -2,6 +2,7 @@ import re
 from src.shapes.line import Line
 from src.shapes.ellipse import Ellipse
 from src.shapes.circle import Circle
+from src.utils.bezier_utils import three_points_bezier, four_points_bezier
 import numpy as np
 
 
@@ -30,13 +31,13 @@ class Path:
                 points.append(tuple(map(float, point.strip().split(' '))))
         return step_type, points
 
-    def consume_move(self, step_type, step_data):
+    def consume_move(self, step_type, step_data, _):
         assert step_type.lower() == 'm'
         assert len(step_data) == 1, "invalid M step in path"
         self.cursor = step_data[0]
         self.closure = step_data[0]
 
-    def consume_horizontal(self, step_type, step_data):
+    def consume_horizontal(self, step_type, step_data, canvas):
         assert step_type.lower() == 'h'
         print(step_data)
         assert len(step_data[0]) == 1, "invalid H/h step in path"
@@ -45,9 +46,9 @@ class Path:
         if step_type == 'h':
             x1 += x0
         self.cursor = (x1, y1)
-        return Line(x0, y0, x1, y1, self.stroke_color, self.stroke_width)
+        Line(x0, y0, x1, y1, self.stroke_color, self.stroke_width).draw(canvas)
 
-    def consume_vertical(self, step_type, step_data):
+    def consume_vertical(self, step_type, step_data, canvas):
         assert step_type.lower() == 'v'
         assert len(step_data[0]) == 1, "invalid V/v step in path"
         x0, y0 = self.cursor
@@ -55,9 +56,9 @@ class Path:
         if step_type == 'v':
             y1 += y0
         self.cursor = (x1, y1)
-        return Line(x0, y0, x1, y1, self.stroke_color, self.stroke_width)
+        Line(x0, y0, x1, y1, self.stroke_color, self.stroke_width).draw(canvas)
 
-    def consume_line(self, step_type, step_data):
+    def consume_line(self, step_type, step_data, canvas):
         assert step_type.lower() == 'l'
         assert len(step_data[0]) == 2, "invalid L/l step in path"
         x0, y0 = self.cursor
@@ -66,23 +67,22 @@ class Path:
             x1 += x0
             y1 += y0
         self.cursor = (x1, y1)
-        return Line(x0, y0, x1, y1, self.stroke_color, self.stroke_width)
+        Line(x0, y0, x1, y1, self.stroke_color, self.stroke_width).draw(canvas)
 
-    def consume_arch(self, step_type, step_data):
+    def consume_arch(self, step_type, step_data, canvas):
         assert step_type.lower() == 'a'
         data = step_data[0]
         rx = data[0]
         ry = data[1]
-        meta = data[3]
-        upper = meta % 10 == 1
-        bigger = (meta // 10) % 10 == 1
-        x1 = data[4]
-        y1 = data[5]
+        upper = data[3]
+        bigger = data[4]
+        x1 = data[5]
+        y1 = data[6]
         x0, y0 = self.cursor
         if step_type == 'a':
             x1 += x0
             y1 += y0
-        centers = Ellipse.find_ellipse_centers((x0, y0), (x1, y1), rx, ry)
+        centers = Ellipse.find_ellipse_centers((x0, y0), (x1, y1), rx, ry, canvas)
 
         if centers:
             centers.sort(key=lambda c: c[1])  # sorting the points by Y, the one on the top will be first
@@ -92,16 +92,25 @@ class Path:
             else:
                 center_idx = 1 if bigger else 0
             cx, cy = centers[center_idx]
-            return Ellipse(cx, cy, rx, ry, self.fill_color, self.stroke_color, self.stroke_width,
-                           below_line=(not upper, ((x0, y0), (x1, y1))))
-        return None
+            self.cursor = (x1, y1)
+            Ellipse(cx, cy, rx, ry, self.fill_color, self.stroke_color, self.stroke_width,
+                    below_line=(not upper, ((x0, y0), (x1, y1)))).draw(canvas)
 
-    def consume_closure(self, step_type, _):
+    def consume_quadratic_bezier_curve(self, step_type, step_data, canvas):
+        assert step_type.lower() == 'q'
+        x0, y0 = self.cursor
+        anchor_x, anchor_y, x1, y1 = step_data[0]
+        if step_type == 'q':
+            x1, y1 = x1 + x0, y1 + y0
+            anchor_x, anchor_y = anchor_x + x0, anchor_y + y0
+        three_points_bezier(x0, y0, anchor_x, anchor_y, x1, y1, canvas, self.stroke_color)
+        self.cursor = (x1, y1)
+
+    def consume_closure(self, step_type, _, canvas):
         assert step_type.lower() == 'z'
-        line = Line(self.cursor[0], self.cursor[1], self.closure[0], self.closure[1], self.stroke_color,
-                    self.stroke_width)
+        Line(self.cursor[0], self.cursor[1], self.closure[0], self.closure[1], self.stroke_color,
+                    self.stroke_width).draw(canvas)
         self.cursor = self.closure
-        return line
 
     def draw(self, canvas):
         func = {
@@ -110,11 +119,10 @@ class Path:
             'v': self.consume_vertical,
             'l': self.consume_line,
             'a': self.consume_arch,
+            'q': self.consume_quadratic_bezier_curve,
             'z': self.consume_closure
         }
         for step in self.steps:
             step_type, step_data = Path.parse_step(step)
             fun = func[step_type.lower()]
-            object = fun(step_type, step_data)
-            if object:
-                object.draw(canvas)
+            fun(step_type, step_data, canvas)

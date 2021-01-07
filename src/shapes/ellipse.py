@@ -1,6 +1,6 @@
 import math
 import numpy as np
-
+from src.shapes.circle import Circle
 
 class Ellipse:
     def __init__(self, x, y, rx, ry, fill_color, stroke_color, stroke_width, below_line=(None, ((None, None), (None, None)))):
@@ -39,18 +39,17 @@ class Ellipse:
 
     @staticmethod
     def point_is_on_ellipse(x, y, cx, cy, rx, ry):
-        threshhold = 1
+        threshhold = 2
         is_inside_small_ellipse = Ellipse.ellipse_factor(x, y, cx, cy, rx - threshhold, ry - threshhold) < 1
         is_inside_big_ellipse = Ellipse.ellipse_factor(x, y, cx, cy, rx + threshhold, ry + threshhold) < 1
         return is_inside_big_ellipse and not is_inside_small_ellipse
 
     @staticmethod
-    def find_ellipse_centers(p1, p2, rx, ry):
+    def find_ellipse_centers(p1, p2, rx, ry, canvas):
         x0, y0 = p1
         x1, y1 = p2
 
         dx, dy = x1 - x0, y1 - y0
-
         centers = []
         for mx in np.arange(-rx, rx, 1):
             for my in np.arange(-ry, ry, 1):
