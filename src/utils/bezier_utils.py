@@ -7,7 +7,7 @@ def interpolate(x1, y1, x2, y2, current_step, total_steps):
     return mx1, my1
 
 
-def three_points_bezier(x1, y1, x2, y2, x3, y3, canvas, color):
+def three_points_bezier(x1, y1, x2, y2, x3, y3, canvas, color, stroke_width):
     steps = 1000
 
     points = []
@@ -21,10 +21,10 @@ def three_points_bezier(x1, y1, x2, y2, x3, y3, canvas, color):
     for a, b in zip(points[:-1], points[1:]):
         lx1, ly1 = a
         lx2, ly2 = b
-        Line(lx1, ly1, lx2, ly2, color, 4).draw(canvas)
+        Line(lx1, ly1, lx2, ly2, color, stroke_width).draw(canvas)
 
 
-def four_points_bezier(x1, y1, x2, y2, x3, y3, x4, y4, canvas, color):
+def four_points_bezier(x1, y1, x2, y2, x3, y3, x4, y4, canvas, color, stroke_width):
     steps = 90
     points = []
     for idx in range(steps + 1):
@@ -41,4 +41,4 @@ def four_points_bezier(x1, y1, x2, y2, x3, y3, x4, y4, canvas, color):
     for a, b in zip(points[:-1], points[1:]):
         lx1, ly1 = a
         lx2, ly2 = b
-        Line(lx1, ly1, lx2, ly2, color, 4).draw(canvas)
+        Line(lx1, ly1, lx2, ly2, color, stroke_width).draw(canvas)

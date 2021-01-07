@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 555 555">
 
 <rect x="0" y="0" width="500" height="500" style="fill:none;stroke:pink;stroke-width:5" />
-  <path d="M300 300 q 100 200 50 0" stroke="black" fill="none"/>
+<!--  <path d="M300 300 q 100 200 50 0" stroke="black" fill="none"/>-->
 <!--  <path d="M70 10 C 70 20, 120 20, 120 10" stroke="black" fill="none"/>-->
 <!--  <path d="M130 10 C 120 20, 180 20, 170 10" stroke="black" fill="none"/>-->
 <!--  <path d="M10 60 C 20 80, 40 80, 50 60" stroke="black" fill="none"/>-->
@@ -9,7 +9,7 @@
 <!--  <path d="M130 60 C 120 80, 180 80, 170 60" stroke="black" fill="none"/>-->
 <!--  <path d="M10 110 C 20 140, 40 140, 50 110" stroke="black" fill="none"/>-->
 <!--  <path d="M70 110 C 70 140, 110 140, 110 110" stroke="black" fill="none"/>-->
-<!--  <path d="M130 110 C 120 140, 180 140, 170 110" stroke="black" fill="none"/>-->
+  <path d="M130 110 c 120 140, 180 140, 170 110" stroke="black" fill="none"/>
 
 
 <!--    <path d="M10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80" stroke="black" fill="none"/>-->
@@ -18,12 +18,12 @@
 
 <!--    <path d="M10 80 Q 52.5 10, 95 80 T 180 80" stroke="black" fill="none"/>-->
 
-    <path d="M10 315
-           L 110 215
-           A 30 50 0 0 1 162.55 162.45
-           L 172.55 152.45
-           A 30 50 0 0 1 215.1 109.9
-           L 315 10" stroke="black" fill="green" stroke-width="2"/>
+<!--    <path d="M10 315-->
+<!--           L 110 215-->
+<!--           A 30 50 0 0 1 162.55 162.45-->
+<!--           L 172.55 152.45-->
+<!--           A 30 50 0 0 1 215.1 109.9-->
+<!--           L 315 10" stroke="black" fill="green" stroke-width="2"/>-->
 
 
 <!--     <path d="M80 80-->
