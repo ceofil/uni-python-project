@@ -14,6 +14,7 @@ class Path:
         self.stroke_width = stroke_width
         self.cursor = None
         self.closure = None
+        self.last_control_point = None
 
     @staticmethod
     def from_svg_props(props, style):
@@ -36,6 +37,7 @@ class Path:
         assert len(step_data) == 1, "invalid M step in path"
         self.cursor = step_data[0]
         self.closure = step_data[0]
+        self.last_control_point = self.cursor
 
     def consume_horizontal(self, step_type, step_data, canvas):
         assert step_type.lower() == 'h'
@@ -47,6 +49,7 @@ class Path:
             x1 += x0
         self.cursor = (x1, y1)
         Line(x0, y0, x1, y1, self.stroke_color, self.stroke_width).draw(canvas)
+        self.last_control_point = self.cursor
 
     def consume_vertical(self, step_type, step_data, canvas):
         assert step_type.lower() == 'v'
@@ -57,6 +60,7 @@ class Path:
             y1 += y0
         self.cursor = (x1, y1)
         Line(x0, y0, x1, y1, self.stroke_color, self.stroke_width).draw(canvas)
+        self.last_control_point = self.cursor
 
     def consume_line(self, step_type, step_data, canvas):
         assert step_type.lower() == 'l'
@@ -68,6 +72,7 @@ class Path:
             y1 += y0
         self.cursor = (x1, y1)
         Line(x0, y0, x1, y1, self.stroke_color, self.stroke_width).draw(canvas)
+        self.last_control_point = self.cursor
 
     def consume_arch(self, step_type, step_data, canvas):
         assert step_type.lower() == 'a'
@@ -95,6 +100,7 @@ class Path:
             self.cursor = (x1, y1)
             Ellipse(cx, cy, rx, ry, self.fill_color, self.stroke_color, self.stroke_width,
                     below_line=(not upper, ((x0, y0), (x1, y1)))).draw(canvas)
+        self.last_control_point = self.cursor
 
     def consume_cubic_bezier_curve(self, step_type, step_data, canvas):
         assert step_type.lower() == 'c'
@@ -106,6 +112,24 @@ class Path:
         four_points_bezier(x0, y0, x_handle0, y_handle0, x_handle1, y_handle1, x1, y1, canvas, self.stroke_color,
                            self.stroke_width)
         self.cursor = (x1, y1)
+        self.last_control_point = x_handle1, y_handle1
+
+    def consume_smooth_cubic_bezier_curve(self, step_type, step_data, canvas):
+        assert step_type.lower() == 's'
+        if self.last_control_point is None:
+            self.last_control_point = self.cursor
+        x_last_handle, y_last_handle = self.last_control_point
+        x0, y0 = self.cursor
+        x_handle0, y_handle0 = x0 + (x0 - x_last_handle), y0 + (y0 - y_last_handle)
+
+        x_handle1, y_handle1 = step_data[0]
+        x1, y1 = step_data[1]
+        if step_type == 's':
+            x1, y1, x_handle1, y_handle1 = x1 + x0, y1 + y0, x_handle1 + x0, y_handle1 + y0
+        four_points_bezier(x0, y0, x_handle0, y_handle0, x_handle1, y_handle1, x1, y1, canvas, self.stroke_color,
+                           self.stroke_width)
+        self.last_control_point = x_handle1, y_handle1
+
 
     def consume_quadratic_bezier_curve(self, step_type, step_data, canvas):
         assert step_type.lower() == 'q'
@@ -116,12 +140,14 @@ class Path:
             anchor_x, anchor_y = anchor_x + x0, anchor_y + y0
         three_points_bezier(x0, y0, anchor_x, anchor_y, x1, y1, canvas, self.stroke_color, self.stroke_width)
         self.cursor = (x1, y1)
+        self.last_control_point = anchor_x, anchor_y
 
     def consume_closure(self, step_type, _, canvas):
         assert step_type.lower() == 'z'
         Line(self.cursor[0], self.cursor[1], self.closure[0], self.closure[1], self.stroke_color,
              self.stroke_width).draw(canvas)
         self.cursor = self.closure
+        self.last_control_point = self.cursor
 
     def draw(self, canvas):
         func = {
@@ -131,6 +157,7 @@ class Path:
             'l': self.consume_line,
             'a': self.consume_arch,
             'c': self.consume_cubic_bezier_curve,
+            's': self.consume_smooth_cubic_bezier_curve,
             'q': self.consume_quadratic_bezier_curve,
             'z': self.consume_closure
         }
