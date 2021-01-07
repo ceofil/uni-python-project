@@ -9,9 +9,10 @@
 <!--  <path d="M130 60 C 120 80, 180 80, 170 60" stroke="black" fill="none"/>-->
 <!--  <path d="M10 110 C 20 140, 40 140, 50 110" stroke="black" fill="none"/>-->
 <!--  <path d="M70 110 C 70 140, 110 140, 110 110" stroke="black" fill="none"/>-->
-  <path d="M130 110 c 120 140, 180 140, 170 110" stroke="black" fill="none"/>
-  <path d="M 10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80" stroke="black" fill="none"/>
-
+<!--  <path d="M130 110 c 120 140, 180 140, 170 110" stroke="black" fill="none"/>-->
+<!--  <path d="M 10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80" stroke="black" fill="none"/>-->
+<!--<path d="M 10 80 Q 95 10 180 80" stroke="black" fill="none"/>-->
+  <path d="M 10 80 Q 52.5 10, 95 80 T 180 80" stroke="black" fill="none"/>
 
 <!--    <path d="M10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80" stroke="black" fill="none"/>-->
 

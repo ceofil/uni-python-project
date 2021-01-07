@@ -130,17 +130,30 @@ class Path:
                            self.stroke_width)
         self.last_control_point = x_handle1, y_handle1
 
-
     def consume_quadratic_bezier_curve(self, step_type, step_data, canvas):
         assert step_type.lower() == 'q'
         x0, y0 = self.cursor
-        anchor_x, anchor_y, x1, y1 = step_data[0]
+        (anchor_x, anchor_y), (x1, y1) = step_data
         if step_type == 'q':
             x1, y1 = x1 + x0, y1 + y0
             anchor_x, anchor_y = anchor_x + x0, anchor_y + y0
         three_points_bezier(x0, y0, anchor_x, anchor_y, x1, y1, canvas, self.stroke_color, self.stroke_width)
         self.cursor = (x1, y1)
         self.last_control_point = anchor_x, anchor_y
+
+    def consume_smooth_quadratic_bezier_curve(self, step_type, step_data, canvas):
+        assert step_type.lower() == 't'
+        x1, y1 = step_data[0]
+        if self.last_control_point is None:
+            self.last_control_point = self.cursor
+        x_last_handle, y_last_handle = self.last_control_point
+        x0, y0 = self.cursor
+        x_handle0, y_handle0 = x0 + (x0 - x_last_handle), y0 + (y0 - y_last_handle)
+        if step_type == 't':
+            x1, y1 = x1 + x0, y1 + y0
+            x_handle0, y_handle0 = x_handle0 + x0, y_handle0 + y0
+        three_points_bezier(x0, y0, x_handle0, y_handle0, x1, y1, canvas, self.stroke_color, self.stroke_width)
+
 
     def consume_closure(self, step_type, _, canvas):
         assert step_type.lower() == 'z'
@@ -159,6 +172,7 @@ class Path:
             'c': self.consume_cubic_bezier_curve,
             's': self.consume_smooth_cubic_bezier_curve,
             'q': self.consume_quadratic_bezier_curve,
+            't': self.consume_smooth_quadratic_bezier_curve,
             'z': self.consume_closure
         }
         for step in self.steps:
