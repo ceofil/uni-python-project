@@ -67,13 +67,13 @@ class Ellipse:
         Returns:
             weather or not <point> is below the line represented by <a> and <b>
         """
-        center_x, center_y = a
-        prime_x, prime_y = b
-        mouse_x, mouse_y = point
-        dx = prime_x - center_x
-        dy = prime_y - center_y
-        mx = mouse_x - center_x
-        my = mouse_y - center_y
+        ax, ay = a
+        bx, by = b
+        x, y = point
+        dx = bx - ax
+        dy = by - ay
+        mx = x - ax
+        my = y - ay
         cross = dx * my - dy * mx
         below = (cross > 0)
         if dx != 0:
