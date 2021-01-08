@@ -9,6 +9,13 @@ import re
 
 
 def convert_color(clr):
+    """Converts color from svg style attribute into rgb format.
+
+    Args:
+        clr: color from svg style attribute in string format.
+    Returns:
+        an rgb color represented by a 3-int tuple.
+    """
     if clr:
         match = re.search(r'rgb\((\d+),(\d+),(\d+)\)', clr)
         if match:
@@ -35,6 +42,13 @@ def convert_color(clr):
 
 
 def parse_style(attrib):
+    """Parses the style attribute of a svg component.
+
+    Args:
+        attrib: the number to get the square root of.
+    Returns:
+        a dictionary containing fill_color, stroke_color and stroke_width
+    """
     fill_color = None
     stroke_color = None
     stroke_width = None
@@ -61,10 +75,12 @@ def parse_style(attrib):
 
 
 def parse_view_box(view_box_str):
+    """Parses the viewBox attribute given from a .svg file"""
     return map(float, view_box_str.split())
 
 
 def parse_xml(filepath):
+    """Parses .svg file and returns a list of drawable components"""
     tree = ET.parse(filepath)
     root = tree.getroot()
     view_box = [int(float(x)) for x in root.attrib['viewBox'].split()]

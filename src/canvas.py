@@ -2,7 +2,20 @@ import png
 
 
 class Canvas:
+    """
+    This class represents a wrapper over a 2d array of pixels.
+
+    Attributes:
+        left, top, right, bottom: integer on-screen boundaries
+        width, height: dimensions of the pixel array
+        _pixels: 2d array containing elements of type (int, int, int).
+    """
     def __init__(self, view_box):
+        """Constructor for Canvas class.
+
+        Args:
+            view_box: 4-int tuple representing the on-screen boundaries.
+        """
         self.left, self.top, self.right, self.bottom = view_box
         self.width = self.right - self.left
         self.height = self.bottom - self.top
@@ -10,6 +23,12 @@ class Canvas:
                         for _ in range(self.height)]
 
     def put_pixel(self, x, y, color):
+        """Sets pixel at giver screen coords to a given color.
+
+        Args:
+            x, y: screen coords
+            color: rgb color
+        """
         if self.left <= x < self.right and self.top <= y < self.bottom:
             x, y = int(x - self.left), int(y - self.top)
             self._pixels[y][x] = (*color, 255)

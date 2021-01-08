@@ -2,7 +2,24 @@ import numpy as np
 
 
 class Line:
+    """
+    Line class, stores coords and style props.
+
+    Attributes:
+        x0, y0: first 2d point
+        x1, y1: seconds 2d point
+        color: 3-int tuple representing rgb color
+        thickness: int representing line thickness
+    """
     def __init__(self, x0, y0, x1, y1, color, thickness=2):
+        """Constructor for Line class.
+
+        Args:
+            x0, y0: first 2d point
+            x1, y1: seconds 2d point
+            color: 3-int tuple representing rgb color
+            thickness: int representing line thickness
+        """
         self.x0 = x0
         self.y0 = y0
         self.x1 = x1
@@ -12,6 +29,7 @@ class Line:
 
     @staticmethod
     def from_svg_props(attrib, style):
+        """Constructor for Line class, takes svg props"""
         assert 'x1' in attrib
         assert 'y1' in attrib
         assert 'x2' in attrib
@@ -24,6 +42,7 @@ class Line:
                     style[2])
 
     def draw(self, canvas):
+        """Draws line according to svg-props given in the constructor"""
         dx = self.x1 - self.x0
         dy = self.y1 - self.y0
 
